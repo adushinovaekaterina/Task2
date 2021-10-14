@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Лабораторная_работа__2__задание_2_
 {
@@ -14,7 +8,83 @@ namespace Лабораторная_работа__2__задание_2_
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent(); // вызов метода который формирует поля на форме, добавляет свойства,
+            // всё то, что находится в Form1.Designer.cs
+
+            txtOrder.Text = Properties.Settings.Default.order.ToString(); // считываем значения из настроек
+        }
+
+        private void button1_Click(object sender, EventArgs e) // реакция на клик
+        {
+            string continuity; // последовательность цифр
+            continuity = this.txtOrder.Text; // сохраняем введенную последовательность в переменные           
+            Properties.Settings.Default.order = continuity; //  передаем введеное значение в параметры
+            Properties.Settings.Default.Save(); // сохраняем переданные значения,
+                                                // чтобы они восстановились пре очередном запуске
+
+            if (Logic.Compare(continuity) != String.Empty) // если возвращаемое значение не является пустым сообщение-ошибкой, то
+            {
+                MessageBox.Show(Logic.Compare(continuity)); // выводим ответ
+            }
+        }
+    }
+    public class Logic // класс, где хранится логика
+    {
+        // функция Compare нужна, чтобы сформировать результирующее сообщение
+        public static string Compare(string continuity)
+        {
+            string answer = ""; // сообщение-вывод
+            string messageError = ""; // сообщение-ошибка
+            bool result = true; // проверка, упорядочена ли последовательность по возрастанию
+
+            // заменяем в строке все пробелы на String.Empty, то есть на "ничего"
+            continuity = System.Text.RegularExpressions.Regex.Replace(continuity, "[ ]", String.Empty);
+            string[] numbers; // массив подстрок               
+            numbers = continuity.Split(','); // введённая строка разбивается на массив подстрок,
+                                             // символом-разделителем является запятая
+
+            string temp = numbers[0]; // временная переменная со значением предудущей цифры,
+                                      // с которой будет сравниваться текущая цифра
+
+            if (!continuity.ToLower().Contains(',')) // если в строке отсутствует запятая 
+            {
+                messageError = "Некорректный ввод";
+                return messageError; // возвращаем пустое сообщение-ошибку
+            }
+            try
+            {
+                for (int i = 1; i < numbers.Length; i++)
+                {
+                    // если текущий элемент массива состоит из одного символа, как и предыдущий
+                    if ((numbers[i].Length == 1) && (numbers[0].Length == 1))
+                    {
+                        // если текущая цифра <= предыдущей цифре
+                        if (Convert.ToInt32(numbers[i]) <= Convert.ToInt32(temp))
+                        {
+                            result = false; // последовательность неупорядочена                                
+                        }
+                        temp = numbers[i]; // во временную переменную присваиваем
+                                           // значение текущей цифры
+                    }
+                    else
+                    {
+                        messageError = "Некорректный ввод";
+                        return messageError; // возвращаем пустое сообщение-ошибку
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                messageError = "Некорректный ввод";
+                return messageError; // возвращаем пустое сообщение-ошибку
+            }
+            // если последовательность упорядочена по возрастанию 
+            if (result)
+                answer = "Последовательность упорядочена по возрастанию";
+            // если последовательность не упорядочена по возрастанию 
+            else
+                answer = "Последовательность не упорядочена по возрастанию";
+            return answer;
         }
     }
 }
