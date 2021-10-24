@@ -1,5 +1,4 @@
-﻿
-namespace Лабораторная_работа__2__задание_2_
+﻿namespace Лабораторная_работа__2__задание_2_
 {
     partial class Form1
     {
@@ -69,7 +68,7 @@ namespace Лабораторная_работа__2__задание_2_
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtOrder);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Задача на For №7";
             this.ResumeLayout(false);
             this.PerformLayout();
 
