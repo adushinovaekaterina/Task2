@@ -6,14 +6,39 @@ namespace Лабораторная_работа__2__задание_2_
 {
     public partial class Form1 : Form
     {
+        public static bool enterLast = false; // проверка, введена ли последовательность цифр и нажата клавиша Enter
         public Form1()
         {
             InitializeComponent(); // вызов метода который формирует поля на форме, добавляет свойства,
             // всё то, что находится в Form1.Designer.cs
 
             txtOrder.Text = Properties.Settings.Default.order.ToString(); // считываем значения из настроек
-        }
 
+            this.KeyPreview = true; // обрабатываем клавиши на уровне формы
+
+            // отпускается клавиша, выполняется код Form1_KeyUp
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+
+            // метод KeyEventHandler обрабатывает событие KeyDown, которое срабатывает, когда нажата клавиша
+            txtOrder.KeyDown += new KeyEventHandler(keydown);
+        }
+        private void keydown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) // если нажата клавиша Enter
+            {
+                txtOrder.Focus(); // установка фокуса на TextBox последовательности цифр
+                enterLast = true; // введена последовательность цифр
+                e.SuppressKeyPress = true; // отключаем системный звук
+            }
+        }
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (enterLast) // если введена последовательность цифр
+            {
+                button1.PerformClick(); // вызываем подпрограмму button1_Click
+                this.Close(); // закрываем форму
+            }
+        }
         private void button1_Click(object sender, EventArgs e) // реакция на клик
         {
             string continuity; // последовательность цифр
@@ -48,7 +73,7 @@ namespace Лабораторная_работа__2__задание_2_
 
             if (!continuity.ToLower().Contains(',')) // если в строке отсутствует запятая 
             {
-                messageError = "Некорректный ввод";
+                messageError = "Некорректный ввод, цифры вводятся через запятую";
                 return messageError; // возвращаем пустое сообщение-ошибку
             }
             try
