@@ -22,17 +22,5 @@ namespace Лабораторная_работа__2__задание_2_.Properties
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string order {
-            get {
-                return ((string)(this["order"]));
-            }
-            set {
-                this["order"] = value;
-            }
-        }
     }
 }
